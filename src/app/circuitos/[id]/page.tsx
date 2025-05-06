@@ -7,6 +7,8 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Modal from "react-modal";
 import styled from "styled-components";
+import NextLink from "next/link";
+
 import {
   Clock,
   BusFront,
@@ -137,15 +139,14 @@ export default function DetalhesCircuito() {
         </Description>
         
             
-          <ButtonWrapper>
-            
-              <ButtonReserva>Fazer Reserva</ButtonReserva>
-        
-           
-
-          </ButtonWrapper>
+        <ButtonWrapper>
+          <StyledLink href="/reserva">
+            Fazer Reserva
+          </StyledLink>
+        </ButtonWrapper>
 
         <MapWrapper>
+          
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3661.603742109244!2d-70.6506!3d-33.4372!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c59d7b2a67c5%3A0xb8ff28b5dbd77313!2sSantiago%2C%20Chile!5e0!3m2!1spt-BR!2sbr!4v1711385930403!5m2!1spt-BR!2sbr"
             width="100%"
@@ -254,7 +255,7 @@ const ButtonWrapper = styled.div`
   margin-top: 2.5rem;
 `;
 
-const ButtonReserva = styled.button`
+const StyledLink = styled.a`
   border-radius: 20px;
   background: linear-gradient(to right, #ff416c, #ff4b2b);
   color: #fff;

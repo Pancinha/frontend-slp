@@ -38,82 +38,141 @@ export default function PaginaReserva() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    try {
-      const res = await fetch("/api/reserva", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, circuito_id: id }),
-      });
-
-      if (res.ok) {
-        alert("Reserva enviada com sucesso!");
-        setForm({ nome: "", email: "", whatsapp: "", pessoas: 1, data: "", observacoes: "" });
-      } else {
-        alert("Erro ao enviar reserva.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Erro no servidor.");
-    }
+    // ainda não valida a data, apenas prossegue
+    alert("Dados recebidos! Em breve você será direcionado para o pagamento.");
   }
 
   if (!circuito) return <Container>Carregando...</Container>;
 
   return (
     <Container>
-      <h1>Reserva para: {circuito.nome}</h1>
-      <Image src={circuito.imagem} alt={circuito.nome} />
-      <Resumo>
-        <p><strong>Preço:</strong> R$ {circuito.preco}</p>
-        <p><strong>Datas disponíveis:</strong> {circuito.datas_disponiveis}</p>
-      </Resumo>
-      <form onSubmit={handleSubmit}>
-        <label>Nome completo
-          <input type="text" name="nome" value={form.nome} onChange={handleChange} required />
-        </label>
-        <label>Email
-          <input type="email" name="email" value={form.email} onChange={handleChange} required />
-        </label>
-        <label>WhatsApp
-          <input type="tel" name="whatsapp" value={form.whatsapp} onChange={handleChange} required />
-        </label>
-        <label>Quantidade de pessoas
-          <input type="number" name="pessoas" min={1} value={form.pessoas} onChange={handleChange} required />
-        </label>
-        <label>Data desejada
-          <input type="date" name="data" value={form.data} onChange={handleChange} required />
-        </label>
-        <label>Observações
-          <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
-        </label>
-        <button type="submit">Confirmar Reserva</button>
-      </form>
+      <Title>Faça sua reserva:</Title>
+      <ContentWrapper>
+        <FormSection>
+          <form onSubmit={handleSubmit}>
+            <label style={{color:"black"}}>Nome completo
+              <input type="text" name="nome" value={form.nome} onChange={handleChange} required />
+            </label>
+            <label style={{color:"black"}}>Email
+              <input  type="email" name="email" value={form.email} onChange={handleChange} required />
+            </label>
+            <label style={{color:"black"}}>WhatsApp
+              <input type="tel" name="whatsapp" value={form.whatsapp} onChange={handleChange} required />
+            </label>
+            <label style={{color:"black"}}>Observações
+              <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
+            </label>
+            <SubmitButton type="submit">Avançar</SubmitButton>
+          </form>
+        </FormSection>
+
+        <DateSection>
+          <Imagem src={circuito.imagem} alt={circuito.nome} />
+          <label>Selecione a data:
+            <input type="date" name="data" value={form.data} onChange={handleChange} required />
+          </label>
+          <label>Quantidade de pessoas:
+            <input type="number" name="pessoas" min={1} value={form.pessoas} onChange={handleChange} required />
+          </label>
+        </DateSection>
+      </ContentWrapper>
     </Container>
   );
 }
 
 const Container = styled.div`
-  max-width: 600px;
-  margin: 120px auto 40px;
+  max-width: 1000px;
+  margin: 300px auto 40px;
   padding: 20px;
-  font-family: sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 `;
 
-const Image = styled.img`
+const Title = styled.h1`
+  text-align: center;
+  font-size: 2.2rem;
+  color: #003b95;
+  margin-bottom: 2rem;
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+`;
+
+const FormSection = styled.div`
+  flex: 1;
+  min-width: 300px;
+
+  h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    label {
+      font-size: 0.95rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      input, textarea {
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+    }
+  }
+`;
+
+const DateSection = styled.div`
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.95rem;
+    color: #444;
+
+    input {
+      margin-top: 0.5rem;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+  }
+`;
+
+const Imagem = styled.img`
   width: 100%;
-  max-height: 240px;
+  max-height: 220px;
   object-fit: cover;
   border-radius: 10px;
-  margin: 20px 0;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 `;
 
-const Resumo = styled.div`
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: #444;
-  margin-bottom: 24px;
+const SubmitButton = styled.button`
+  margin-top: 1rem;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(to right, #ff416c, #ff4b2b);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: filter 0.3s;
 
-  p {
-    margin: 0.5rem 0;
+  &:hover {
+    filter: brightness(1.1);
   }
 `;
