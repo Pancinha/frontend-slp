@@ -45,38 +45,53 @@ export default function PaginaReserva() {
   if (!circuito) return <Container>Carregando...</Container>;
 
   return (
-    <Container>
-      <Title>Faça sua reserva:</Title>
-      <ContentWrapper>
-        <FormSection>
-          <form onSubmit={handleSubmit}>
-            <label style={{color:"black"}}>Nome completo
-              <input type="text" name="nome" value={form.nome} onChange={handleChange} required />
-            </label>
-            <label style={{color:"black"}}>Email
-              <input  type="email" name="email" value={form.email} onChange={handleChange} required />
-            </label>
-            <label style={{color:"black"}}>WhatsApp
-              <input type="tel" name="whatsapp" value={form.whatsapp} onChange={handleChange} required />
-            </label>
-            <label style={{color:"black"}}>Observações
-              <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
-            </label>
-            <SubmitButton type="submit">Avançar</SubmitButton>
-          </form>
-        </FormSection>
+    <>
+      <Container>
+        <Title>Faça sua reserva:</Title>
+        <ContentWrapper>
+          <FormSection>
+            <form onSubmit={handleSubmit}>
+              <label style={{color:"black"}}>Nome completo
+                <input type="text" name="nome" value={form.nome} onChange={handleChange} required />
+              </label>
+              <label style={{color:"black"}}>Email
+                <input  type="email" name="email" value={form.email} onChange={handleChange} required />
+              </label>
+              <label style={{color:"black"}}>WhatsApp
+                <input type="tel" name="whatsapp" value={form.whatsapp} onChange={handleChange} required />
+              </label>
+              <label style={{color:"black"}}>Observações
+                <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
+              </label>
+              <SubmitButton type="submit">Avançar</SubmitButton>
+            </form>
+          </FormSection>
 
-        <DateSection>
-          <Imagem src={circuito.imagem} alt={circuito.nome} />
-          <label>Selecione a data:
-            <input type="date" name="data" value={form.data} onChange={handleChange} required />
-          </label>
-          <label>Quantidade de pessoas:
-            <input type="number" name="pessoas" min={1} value={form.pessoas} onChange={handleChange} required />
-          </label>
-        </DateSection>
-      </ContentWrapper>
-    </Container>
+          <DateSection>
+            <Imagem src={circuito.imagem} alt={circuito.nome} />
+            <label>Selecione a data:
+              <input type="date" name="data" value={form.data} onChange={handleChange} required />
+            </label>
+            <label>Quantidade de pessoas:
+              <input type="number" name="pessoas" min={1} value={form.pessoas} onChange={handleChange} required />
+            </label>
+          </DateSection>
+        </ContentWrapper>
+      </Container>
+      <section className="bannerMad">
+            <div className="divBlue">
+              <p className="textoBanner">Uma seleção especial com o melhor do turismo.</p>
+            </div>
+            <div className="divPink"></div>
+
+            {/* Imagem do MAD sobrepondo as divs */}
+            <img
+              className="madImage"
+              src="https://soylocoportiamerica.com.br/wp-content/uploads/2025/02/1024-1024-avatar-mad.webp"
+              alt="Consultor MAD"
+            />
+        </section>
+    </>
   );
 }
 
