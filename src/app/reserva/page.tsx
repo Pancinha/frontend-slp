@@ -18,9 +18,9 @@ export default function PaginaReserva() {
   const [form, setForm] = useState({
     nome: "",
     email: "",
-    whatsapp: "",
-    pessoas: 1,
-    data: "",
+    telefone: "",
+    data_viagem: "",
+    qnt_pessoas: 1,
     observacoes: "",
   });
 
@@ -31,18 +31,48 @@ export default function PaginaReserva() {
       .catch((err) => console.error(err));
   }, [id]);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // ainda não valida a data, apenas prossegue
-    alert("Dados recebidos! Em breve você será direcionado para o pagamento.");
+
+    const payload = {
+      ...form,
+      circuito_nome: circuito?.nome || "Não informado",
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/reservas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert("✅ Reserva enviada com sucesso! Em breve entraremos em contato.");
+        setForm({
+          nome: "",
+          email: "",
+          telefone: "",
+          data_viagem: "",
+          qnt_pessoas: 1,
+          observacoes: "",
+        });
+      } else {
+        const erro = await res.json();
+        console.error("Erro ao enviar reserva:", erro.error);
+        alert("❌ Erro ao enviar reserva: " + erro.error);
+      }
+    } catch (err) {
+      console.error("Erro de conexão:", err);
+      alert("❌ Erro ao conectar com o servidor.");
+    }
   }
 
-  if (!circuito) return <Container>Carregando...</Container>;
+  if (!circuito) return <Container>Carregando informações do circuito...</Container>;
 
   return (
     <>
@@ -51,55 +81,54 @@ export default function PaginaReserva() {
         <ContentWrapper>
           <FormSection>
             <form onSubmit={handleSubmit}>
-              <label style={{color:"black"}}>Nome completo
-                <input type="text" name="nome" value={form.nome} onChange={handleChange} required />
+              <label>Nome completo
+                <input name="nome" type="text" value={form.nome} onChange={handleChange} required />
               </label>
-              <label style={{color:"black"}}>Email
-                <input  type="email" name="email" value={form.email} onChange={handleChange} required />
+              <label>Email
+                <input name="email" type="email" value={form.email} onChange={handleChange} required />
               </label>
-              <label style={{color:"black"}}>WhatsApp
-                <input type="tel" name="whatsapp" value={form.whatsapp} onChange={handleChange} required />
+              <label>Telefone / WhatsApp
+                <input name="telefone" type="tel" value={form.telefone} onChange={handleChange} required />
               </label>
-              <label style={{color:"black"}}>Observações
+              <label>Observações
                 <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
               </label>
-              <SubmitButton type="submit">Avançar</SubmitButton>
+              <SubmitButton type="submit">Enviar Reserva</SubmitButton>
             </form>
           </FormSection>
 
           <DateSection>
             <Imagem src={circuito.imagem} alt={circuito.nome} />
-            <label>Selecione a data:
-              <input type="date" name="data" value={form.data} onChange={handleChange} required />
+            <label>Data desejada
+              <input name="data_viagem" type="date" value={form.data_viagem} onChange={handleChange} required />
             </label>
-            <label>Quantidade de pessoas:
-              <input type="number" name="pessoas" min={1} value={form.pessoas} onChange={handleChange} required />
+            <label>Quantidade de pessoas
+              <input name="qnt_pessoas" type="number" min={1} value={form.qnt_pessoas} onChange={handleChange} required />
             </label>
           </DateSection>
         </ContentWrapper>
       </Container>
-      <section className="bannerMad">
-            <div className="divBlue">
-              <p className="textoBanner">Uma seleção especial com o melhor do turismo.</p>
-            </div>
-            <div className="divPink"></div>
 
-            {/* Imagem do MAD sobrepondo as divs */}
-            <img
-              className="madImage"
-              src="https://soylocoportiamerica.com.br/wp-content/uploads/2025/02/1024-1024-avatar-mad.webp"
-              alt="Consultor MAD"
-            />
-        </section>
+      <section className="bannerMad">
+        <div className="divBlue">
+          <p className="textoBanner">Uma seleção especial com o melhor do turismo.</p>
+        </div>
+        <div className="divPink"></div>
+        <img
+          className="madImage"
+          src="https://soylocoportiamerica.com.br/wp-content/uploads/2025/02/1024-1024-avatar-mad.webp"
+          alt="Consultor MAD"
+        />
+      </section>
     </>
   );
 }
 
+// Estilos
 const Container = styled.div`
   max-width: 1000px;
   margin: 300px auto 40px;
   padding: 20px;
-  font-family: 'Segoe UI', sans-serif;
 `;
 
 const Title = styled.h1`
@@ -118,12 +147,6 @@ const ContentWrapper = styled.div`
 const FormSection = styled.div`
   flex: 1;
   min-width: 300px;
-
-  h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 1rem;
-  }
 
   form {
     display: flex;
@@ -155,8 +178,6 @@ const DateSection = styled.div`
   label {
     display: flex;
     flex-direction: column;
-    font-size: 0.95rem;
-    color: #444;
 
     input {
       margin-top: 0.5rem;
